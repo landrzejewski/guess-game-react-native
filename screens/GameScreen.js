@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {Alert, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Header from '../components/ui/Header';
 import NumberContainer from '../components/game/NumberContainer';
@@ -24,8 +24,8 @@ const GameScreen = ({pickedNumber, onGameOver}) => {
   function nextGuessHandler(direction) {
     // direction => 'lower', 'greater'
     if (
-      (direction === 'lower' && currentGuess < userNumber) ||
-      (direction === 'greater' && currentGuess > userNumber)
+      (direction === 'lower' && currentGuess < pickedNumber) ||
+      (direction === 'greater' && currentGuess > pickedNumber)
     ) {
       Alert.alert("Don't lie!", 'You know that this is wrong...', [
         {text: 'Sorry!', style: 'cancel'},
