@@ -1,11 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ImageBackground, SafeAreaView, StyleSheet, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Colors from './constants/colors';
 import StartScreen from './screens/StartScreen';
+import GameScreen from './screens/GameScreen';
 
 const App = () => {
-  const screen = <StartScreen />;
+  const [pickedNumber, setPickedNumber] = useState();
+
+  let screen = <StartScreen onNumberPicked={setPickedNumber} />;
+
+  if (pickedNumber) {
+    screen = <GameScreen />;
+  }
 
   return (
     <LinearGradient

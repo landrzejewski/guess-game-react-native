@@ -1,20 +1,65 @@
 import {
+  Alert,
   KeyboardAvoidingView,
   ScrollView,
-  StyleSheet, Text,
+  StyleSheet,
+  Text,
+  TextInput,
   useWindowDimensions,
   View,
-} from "react-native";
-import React from 'react';
+} from 'react-native';
+import React, {useState} from 'react';
 import Colors from '../constants/colors';
 import Header from '../components/ui/Header';
-import Card from "../components/ui/Card";
-import Title from "../components/ui/Title";
-import PrimaryButton from "../components/ui/PrimaryButton";
+import Card from '../components/ui/Card';
+import Title from '../components/ui/Title';
+import PrimaryButton from '../components/ui/PrimaryButton';
 
 const StartScreen = props => {
+  const [enteredNumber, setEnteredNumber] = useState('');
   const {width, height} = useWindowDimensions();
   const marginTop = height < 380 ? 30 : 100;
+
+  const restNumber = () => setEnteredNumber('');
+
+  const confirmNumber = () => {
+    const pickedNumber = parseInt(enteredNumber);
+
+    if (isNaN(pickedNumber) || pickedNumber <= 0 || pickedNumber > 99) {
+      Alert.alert(
+        'Invalid number!',
+        'Number has to be a number between 1 and 99.',
+        [{text: 'Ok', style: 'cancel', onPress: restNumber}],
+      );
+      return;
+    }
+
+    props.onNumberPicked(pickedNumber);
+  };
+
+  const Body = () => {
+    return (
+      <>
+        <TextInput
+          style={styles.numberInput}
+          maxLength={2}
+          keyboardType="number-pad"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={setEnteredNumber}
+          value={enteredNumber}
+        />
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={restNumber}>Reset</PrimaryButton>
+          </View>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={confirmNumber}>Confirm</PrimaryButton>
+          </View>
+        </View>
+      </>
+    );
+  };
 
   return (
     <ScrollView style={styles.screen}>
@@ -24,7 +69,7 @@ const StartScreen = props => {
           <Header>Guess My number</Header>
           <Card>
             <Title>Enter a number</Title>
-            <PrimaryButton>Start</PrimaryButton>
+            <Body />
           </Card>
         </View>
       </KeyboardAvoidingView>
@@ -58,6 +103,7 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
+    marginVertical: 8,
   },
   buttonContainer: {
     flex: 1,
