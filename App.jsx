@@ -4,25 +4,38 @@ import LinearGradient from 'react-native-linear-gradient';
 import Colors from './constants/colors';
 import StartScreen from './screens/StartScreen';
 import GameScreen from './screens/GameScreen';
+import GameOverScreen from './screens/GameOverScreen';
 
 const App = () => {
   const [pickedNumber, setPickedNumber] = useState();
   const [gameIsOver, setGameIsOver] = useState(false);
   const [guessRounds, setGuessRounds] = useState(0);
 
-  const onGameOver = (numberOfRounds) => {
+  const onGameOver = numberOfRounds => {
     setGameIsOver(true);
     setGuessRounds(numberOfRounds);
   };
 
+  function restartGame() {
+    setPickedNumber(null);
+    setGuessRounds(0);
+    setGameIsOver(false);
+  }
+
   let screen = <StartScreen onNumberPicked={setPickedNumber} />;
 
   if (pickedNumber) {
-    screen = <GameScreen onGameOver={onGameOver} />;
+    screen = <GameScreen pickedNumber={pickedNumber} onGameOver={onGameOver} />;
   }
 
   if (gameIsOver && pickedNumber) {
-    screen =
+    screen = (
+      <GameOverScreen
+        userNumber={pickedNumber}
+        roundsNumber={guessRounds}
+        onStartNewGame={restartGame}
+      />
+    );
   }
 
   return (
